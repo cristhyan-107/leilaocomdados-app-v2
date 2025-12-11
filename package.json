@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.87.1",
@@ -21,6 +21,8 @@
   "devDependencies": {
     "@types/node": "^22.14.0",
     "@types/oauth": "^0.9.6",
-    "typescript": "~5.8.2"
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0",
+    "@vitejs/plugin-react": "^5.0.0"
   }
 }
