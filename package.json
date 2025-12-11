@@ -1,5 +1,5 @@
 {
-  "name": "[leilaocomdados]-painel-v1",
+  "name": "painel-v1",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,7 +11,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.87.1",
     "axios": "^1.13.2",
-    "oauth-1.0a": "^2.2.6",
+    "oauth": "^0.9.15",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.4",
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
+    "@types/oauth": "^0.9.6",
     "@vitejs/plugin-react": "^5.0.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"

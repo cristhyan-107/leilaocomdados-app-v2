@@ -102,11 +102,8 @@ const LancamentosView: React.FC = () => {
     const handleConnectSplitwise = () => {
         if (!selectedImovel) return;
         const userId = getUserId();
-        // Redirect to Auth API
-        const authUrl = `/api/splitwise/auth?property=${encodeURIComponent(selectedImovel)}&userId=${userId}`;
-        // Open in same window or new? Prompt said "open OAuth", implies redirect. 
-        // But typically "new tab" is better to not lose state, but callback needs to return here.
-        // prompt says: "Ao clicar no botão: abrir nova aba"
+        // Unified Route: /api/splitwise/init
+        const authUrl = `/api/splitwise/init?property=${encodeURIComponent(selectedImovel)}&user_id=${userId}`;
         window.open(authUrl, '_blank');
     };
 
@@ -128,9 +125,10 @@ const LancamentosView: React.FC = () => {
         try {
             const userId = getUserId();
             const encodedProp = encodeURIComponent(propName);
-            const response = await axios.get(`/api/splitwise/sync?property=${encodedProp}&userId=${userId}`);
+            // Unified Route: /api/splitwise/expenses
+            const response = await axios.get(`/api/splitwise/expenses?property=${encodedProp}&user_id=${userId}`);
 
-            const { expenses, group } = response.data;
+            const { expenses, group_id } = response.data;
 
             if (!expenses || expenses.length === 0) {
                 alert('Conectado com sucesso, mas nenhuma despesa nova encontrada.');
@@ -175,7 +173,7 @@ const LancamentosView: React.FC = () => {
 
             if (newEntries.length > 0) {
                 addBatchCashFlowEntries(newEntries);
-                alert(`${addedCount} lançamentos importados do Splitwise (${group?.name || 'Grupo'})!`);
+                alert(`${addedCount} lançamentos importados do Splitwise (Grupo ID: ${group_id})!`);
             } else {
                 alert('Conectado! Todos os lançamentos do grupo já estão no sistema.');
             }
@@ -947,8 +945,8 @@ const FluxoDeCaixa: React.FC = () => {
                 <button
                     onClick={() => setActiveTab('dashboard')}
                     className={`px-6 py-2 text-sm font-medium rounded-t-lg transition-colors duration-200 border-t border-l border-r ${activeTab === 'dashboard'
-                            ? 'bg-gray-800 text-cyan-400 border-gray-700'
-                            : 'bg-gray-900 text-gray-500 border-transparent hover:text-gray-300 hover:bg-gray-800'
+                        ? 'bg-gray-800 text-cyan-400 border-gray-700'
+                        : 'bg-gray-900 text-gray-500 border-transparent hover:text-gray-300 hover:bg-gray-800'
                         }`}
                 >
                     Dashboard
@@ -956,8 +954,8 @@ const FluxoDeCaixa: React.FC = () => {
                 <button
                     onClick={() => setActiveTab('lancamentos')}
                     className={`px-6 py-2 text-sm font-medium rounded-t-lg transition-colors duration-200 border-t border-l border-r ${activeTab === 'lancamentos'
-                            ? 'bg-gray-800 text-cyan-400 border-gray-700'
-                            : 'bg-gray-900 text-gray-500 border-transparent hover:text-gray-300 hover:bg-gray-800'
+                        ? 'bg-gray-800 text-cyan-400 border-gray-700'
+                        : 'bg-gray-900 text-gray-500 border-transparent hover:text-gray-300 hover:bg-gray-800'
                         }`}
                 >
                     Lançamentos
