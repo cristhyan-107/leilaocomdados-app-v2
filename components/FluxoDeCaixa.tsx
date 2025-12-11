@@ -102,8 +102,8 @@ const LancamentosView: React.FC = () => {
     const handleConnectSplitwise = () => {
         if (!selectedImovel) return;
         const userId = getUserId();
-        // Unified Route: /api/splitwise/init
-        const authUrl = `/api/splitwise/init?property=${encodeURIComponent(selectedImovel)}&user_id=${userId}`;
+        // Reverted to separate file: /api/splitwise/auth
+        const authUrl = `/api/splitwise/auth?property=${encodeURIComponent(selectedImovel)}&userId=${userId}`;
         window.open(authUrl, '_blank');
     };
 
@@ -125,8 +125,8 @@ const LancamentosView: React.FC = () => {
         try {
             const userId = getUserId();
             const encodedProp = encodeURIComponent(propName);
-            // Unified Route: /api/splitwise/expenses
-            const response = await axios.get(`/api/splitwise/expenses?property=${encodedProp}&user_id=${userId}`);
+            // Reverted to separate file: /api/splitwise/sync
+            const response = await axios.get(`/api/splitwise/sync?property=${encodedProp}&userId=${userId}`);
 
             const { expenses, group_id } = response.data;
 
