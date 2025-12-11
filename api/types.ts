@@ -1,15 +1,10 @@
+// types.ts
 import { IncomingMessage, ServerResponse } from 'http';
 
-// Custom interface to match Vercel/Next behavior without the dependency
-export interface VercelRequest extends IncomingMessage {
-    query: { [key: string]: string | string[] };
-    cookies: { [key: string]: string };
-    body: any;
-}
-
-export interface VercelResponse extends ServerResponse {
-    send: (body: any) => VercelResponse;
-    json: (jsonBody: any) => VercelResponse;
-    status: (statusCode: number) => VercelResponse;
-    redirect: (url: string) => VercelResponse;
-}
+export type VercelRequest = IncomingMessage & { query: Record<string, any> };
+export type VercelResponse = ServerResponse & {
+    status: (code: number) => VercelResponse;
+    json: (data: any) => void;
+    send: (data: any) => void;
+    redirect: (url: string) => void;
+};
