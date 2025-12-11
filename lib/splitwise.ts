@@ -6,7 +6,6 @@ const CONSUMER_SECRET = process.env.SPLITWISE_CONSUMER_SECRET;
 const APP_URL = process.env.APP_URL;
 
 if (!CONSUMER_KEY || !CONSUMER_SECRET || !APP_URL) {
-    // Warn but don't crash immediately on load, functions might crash on execution if missing
     console.warn("Missing Splitwise Env Vars");
 }
 
@@ -63,7 +62,7 @@ export async function getAccessToken(
     });
 }
 
-// 3. Generic GET request (replaces axios to avoid type errors and header incompatibilities)
+// 3. Generic GET request (Fixed: uses oauth lib, no Axios headers issues)
 export async function splitwiseGet<T>(
     path: string,
     accessToken: string,

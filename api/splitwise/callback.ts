@@ -1,12 +1,14 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { VercelRequest, VercelResponse } from '../../types';
 import { getAccessToken, listGroups } from '../../lib/splitwise';
 import { supabaseServer } from '../../lib/supabase';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-    const { oauth_token, oauth_verifier } = req.query;
+    const oauth_token = req.query?.oauth_token as string;
+    const oauth_verifier = req.query?.oauth_verifier as string;
 
     if (!oauth_token || !oauth_verifier) {
-        return res.status(400).send("Missing OAuth parameters");
+        res.statusCode = 400;
+        return res.json({ error: "Missing OAuth parameters" });
     }
 
     try {
@@ -20,16 +22,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             .single();
 
         if (reqErr || !reqRow) {
-            return res.status(400).send("Invalid or expired request token");
+            res.statusCode = 400;
+            return res.json({ error: "Invalid or expired request token" });
         }
 
         const { request_token_secret, property_name, user_id } = reqRow;
 
         // Exchange for Access Token
         const { oauth_access_token, oauth_access_token_secret } = await getAccessToken(
-            oauth_token as string,
+            oauth_token,
             request_token_secret,
-            oauth_verifier as string
+            oauth_verifier
         );
 
         // Save Connection
@@ -70,10 +73,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         // Redirect
         const appUrl = process.env.APP_URL;
-        res.redirect(`${appUrl}/fluxo-caixa?status=connected&property=${encodeURIComponent(property_name || "")}`);
+        const redirectUrl = `${appUrl}/fluxo-caixa?status=connected&property=${encodeURIComponent(property_name || "")}`;
+
+        if (res.redirect) {
+            res.redirect(redirectUrl);
+        } else {
+            res.setHeader('Location', redirectUrl);
+            res.statusCode = 302;
+            res.end();
+        }
 
     } catch (error: any) {
         console.error('Callback Error:', error);
-        res.status(500).send(`Authentication failed: ${error.message}`);
+        res.statusCode = 500;
+        res.json({ error: `Authentication failed: ${error.message}` });
     }
 }

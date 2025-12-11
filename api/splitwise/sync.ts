@@ -1,12 +1,14 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { VercelRequest, VercelResponse } from '../../types';
 import { getExpenses } from '../../lib/splitwise';
 import { supabaseServer } from '../../lib/supabase';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-    const { property, userId } = req.query;
+    const property = req.query?.property as string;
+    const userId = req.query?.userId as string;
 
     if (!property || !userId) {
-        return res.status(400).json({ error: 'Missing property or userId' });
+        res.statusCode = 400;
+        return res.json({ error: 'Missing property or userId' });
     }
 
     try {
@@ -21,7 +23,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             .single();
 
         if (!links) {
-            return res.status(404).json({ error: 'Property not linked to any Splitwise group' });
+            res.statusCode = 404;
+            return res.json({ error: 'Property not linked to any Splitwise group' });
         }
 
         // Get Connection
@@ -32,22 +35,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             .single();
 
         if (!conn) {
-            return res.status(401).json({ error: 'User not connected to Splitwise' });
+            res.statusCode = 401;
+            return res.json({ error: 'User not connected to Splitwise' });
         }
 
         // Fetch Expenses
         const expensesData = await getExpenses(conn.access_token, conn.access_token_secret, links.splitwise_group_id);
-
-        // Ensure expenses is array
         const expensesList = expensesData.expenses || [];
 
-        res.status(200).json({
+        res.statusCode = 200;
+        res.json({
             group_id: links.splitwise_group_id,
             expenses: expensesList
         });
 
     } catch (error: any) {
         console.error('Sync Error:', error);
-        res.status(500).json({ error: 'Failed to sync expenses', details: error.message });
+        res.statusCode = 500;
+        res.json({ error: 'Failed to sync expenses', details: error.message });
     }
 }
