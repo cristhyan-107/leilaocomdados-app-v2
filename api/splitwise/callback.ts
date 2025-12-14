@@ -1,7 +1,8 @@
-import { VercelRequest, VercelResponse } from '../../types';
-import { getAccessToken, listGroups } from '../../lib/splitwise';
-import { supabaseServer } from '../../lib/supabase';
-
+// api/splitwise/auth.ts, callback.ts, sync.ts
+// ...
+import { getRequestToken } from '../../../lib/splitwise.js';
+import { supabaseServer } from '../../../lib/supabase.js';
+// ...
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     const oauth_token = req.query?.oauth_token as string;
     const oauth_verifier = req.query?.oauth_verifier as string;

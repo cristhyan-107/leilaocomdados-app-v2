@@ -1,8 +1,8 @@
-// api/splitwise/auth.ts
+// api/splitwise/auth.ts, callback.ts, sync.ts
 // ...
-import { getRequestToken } from '../../lib/splitwise.js';
-import { supabaseServer } from '../../lib/supabase.js';
-// ... (use '../../types.js' se 'types' for um arquivo, ou '../../types' se for uma pasta)
+import { getRequestToken } from '../../../lib/splitwise.js';
+import { supabaseServer } from '../../../lib/supabase.js';
+// ...
 
 // Lógica para lidar com a solicitação GET para iniciar o OAuth do Splitwise
 export default async (req: VercelRequest, res: VercelResponse) => {
