@@ -1,8 +1,8 @@
 // api/splitwise/auth.ts, callback.ts, sync.ts
-// ...
+// O caminho mais longo, forçando a extensão de módulo Node.js
+import type { VercelRequest, VercelResponse } from '../../../types.js';
 import { getRequestToken } from '../../../lib/splitwise.js';
 import { supabaseServer } from '../../../lib/supabase.js';
-// ...
 
 // Lógica para lidar com a solicitação GET para iniciar o OAuth do Splitwise
 export default async (req: VercelRequest, res: VercelResponse) => {

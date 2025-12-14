@@ -1,8 +1,8 @@
 // api/splitwise/auth.ts, callback.ts, sync.ts
-// ...
+// O caminho mais longo, forçando a extensão de módulo Node.js
+import type { VercelRequest, VercelResponse } from '../../../types.js';
 import { getRequestToken } from '../../../lib/splitwise.js';
 import { supabaseServer } from '../../../lib/supabase.js';
-// ...
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     const property = req.query?.property as string;
     const userId = req.query?.userId as string;
